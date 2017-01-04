@@ -6,6 +6,7 @@ RUN apt-get update && \
     apt-get clean all
 
 #ssh
+RUN echo "root:password" | chpasswd
 RUN mkdir /var/run/sshd
 # RUN sed -ri 's/^PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config
 # RUN sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config
@@ -13,6 +14,7 @@ RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/s
 RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 ENV NOTVISIBLE "in users profile"
 RUN echo "export VISIBLE=now" >> /etc/profile
+RUN service sshd start
 EXPOSE 22
 
 #install libsodium support chacha20
