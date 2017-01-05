@@ -1,10 +1,11 @@
 # ssr-with-net-speeder
 
 FROM ubuntu:16.04
+MAINTAINER gicoer <gicoer@gmail.com>
 
 RUN apt-get update && \
 apt-get clean  && \
-apt-get install -y pwgen wget python python-pip python-m2crypto libnet1-dev libpcap0.8-dev git gcc openssh-server && \
+apt-get install -y python python-pip python-m2crypto libnet1-dev libpcap0.8-dev git gcc openssh-server && \
 apt-get clean
 
 #ssh
@@ -16,14 +17,6 @@ RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so
 # RUN /usr/sbin/sshd -D
 RUN service ssh start
 EXPOSE 22
-
-#install libsodium support chacha20
-RUN wget --no-check-certificate -O libsodium-1.0.11.tar.gz https://github.com/jedisct1/libsodium/releases/download/1.0.11/libsodium-1.0.11.tar.gz &&\
-    tar zxf libsodium-1.0.11.tar.gz && rm -rf libsodium-1.0.11.tar.gz
-WORKDIR libsodium-1.0.11
-RUN ./configure && make && make install
-RUN echo "/usr/local/lib" > /etc/ld.so.conf.d/local.conf
-RUN ldconfig && cd .. && rm -rf libsodium-1.0.11
 
 RUN git clone -b manyuser https://github.com/breakwa11/shadowsocks.git ssr
 RUN git clone https://github.com/snooda/net-speeder.git net-speeder
